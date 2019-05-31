@@ -1,16 +1,11 @@
-import { SinonStub } from 'sinon';
-
-let y: SinonStub<[any], any> = {} as any;
-
-// Type 'SinonStub<[any], any>' is not assignable to type 'SinonStub<any[], any>'.
-//  Property '0' is missing in type 'any[]' but required in type '[any]'.
-let x: SinonStub<any[], any> = y;
-
-
-interface MyType<T, U> {
-  t: T;
-  u: U;
+interface MyType<T extends any[]> {
+  (...args: T): any;
 }
 
-let a: MyType<[any], any> = {} as any;
-let b: MyType<any[], any> = a; // OK
+declare let a: MyType<[any]>;
+declare let b: MyType<any[]>;
+
+// Following is an error in 3.5.1 but not 3.4.5 with `strictFunctionTypes: true`
+// Type 'MyType<[any], any>' is not assignable to type 'MyType<any[], any>'.
+//  Property '0' is missing in type 'any[]' but required in type '[any]'.
+b = a;
